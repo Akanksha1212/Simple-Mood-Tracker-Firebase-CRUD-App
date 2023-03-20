@@ -108,12 +108,12 @@ class _MoodPageState extends State<MoodPage> {
             ),
           ),
           // CircleAvatar(backgroundImage: AssetImage(user.age > 1 ? "" : "")),
-          title: Text(mood.description!),
-          subtitle: Text(
+          title: Text(
             DateFormat("yyyy-MM-dd").format(
               (mood.entryDate!),
             ),
           ),
+          subtitle: Text(mood.description!),
           trailing: IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
@@ -204,26 +204,22 @@ class _MoodPageState extends State<MoodPage> {
                             final docUser = FirebaseFirestore.instance
                                 .collection('moodentries')
                                 .doc(mood.id);
-                            dynamic moodValue;
-                            dynamic entryDate;
-                            if (moodValueUpdateController.text.isEmpty) {
-                              moodValue = mood.moodValue;
-                            } else {
-                              moodValue = moodValueUpdateController.text;
-                            }
-                            if (entryDateUpdateController.text.isEmpty) {
-                              entryDate = mood.entryDate;
-                            } else {
-                              entryDate = entryDateUpdateController.text;
-                            }
+
                             docUser.update(
                               {
                                 'description':
                                     descriptionUpdateController.text.isEmpty
                                         ? mood.description
                                         : descriptionUpdateController.text,
-                                'moodValue': int.parse(moodValue),
-                                'entryDate': DateTime.parse(entryDate),
+                                'moodValue': moodValueUpdateController
+                                        .text.isEmpty
+                                    ? mood.moodValue
+                                    : int.parse(moodValueUpdateController.text),
+                                'entryDate':
+                                    entryDateUpdateController.text.isEmpty
+                                        ? mood.entryDate
+                                        : DateTime.parse(
+                                            entryDateUpdateController.text),
                               },
                             );
                             setState(() {
